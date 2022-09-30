@@ -12,17 +12,38 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { assert, object, string, number } from "superstruct";
 
 const theme = createTheme();
 
 const SignUp = () => {
+  /* const data = {
+    firstName: "Jane",
+    lastName: "Smith",
+    email: "jane@example.com",
+    password: 1234,
+  }; */
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    const User = object({
+      firstName: string(),
+      lastName: string(),
+      email: string(),
+      password: number(),
+    });
+
     const data = new FormData(event.currentTarget);
+
     console.log({
+      firstName: data.get("firstName"),
+      lastName: data.get("lastName"),
       email: data.get("email"),
       password: data.get("password"),
     });
+
+    assert(data, User);
   };
 
   return (
