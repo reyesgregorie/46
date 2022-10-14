@@ -12,47 +12,43 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { assert, Describe, object, string, number } from "superstruct";
+import { assert, coerce, Describe, object, string, number } from "superstruct";
 
 const theme = createTheme();
 
 const SignUp = () => {
-  /* const data = {
-    firstName: "Jane",
-    lastName: "Smith",
-    email: "jane@example.com",
-    password: 1234,
-  }; */
-
   const handleSubmit = (e: any) => {
     e.preventDefault();
-
-    //type User = Infer<typeof User>;
 
     type User = {
       firstName: string;
       lastName: string;
       email: string;
-      password: number;
+      password: string;
     };
 
+    // eslint-disable-next-line @typescript-eslint/no-redeclare
     const User: Describe<User> = object({
       firstName: string(),
       lastName: string(),
       email: string(),
-      password: number(),
+      password: coerce(string(), number(), (password) =>
+        parseFloat("password")
+      ),
     });
 
     const data = new FormData(e.currentTarget);
 
-    assert(data, User);
-
-    console.log({
+    const user = {
       firstName: data.get("firstName"),
       lastName: data.get("lastName"),
       email: data.get("email"),
       password: data.get("password"),
-    });
+    };
+
+    assert(user, User);
+
+    console.log(user);
   };
 
   return (
